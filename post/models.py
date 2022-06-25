@@ -5,3 +5,5 @@ class PostModel(models.Model):
     author = models.ForeignKey('user.UserModel' , on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=30)
     content = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)

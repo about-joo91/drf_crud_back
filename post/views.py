@@ -4,8 +4,8 @@ from rest_framework import status
 
 from .models import PostModel
 from .serializer import PostSerializer
-from user.models import UserModel
-# Create your views here.
+
+
 class PostView(APIView):
     def post(self, request):
         cur_user = request.user
@@ -21,8 +21,16 @@ class PostView(APIView):
         return Response(PostSerializer(post_models, many=True).data, status=status.HTTP_200_OK)
     def delete(self, request):
         post_id = request.query_params.get('post_id')
-        post = PostModel.objects.get(id = post_id)
-        post.delete()
+        post_obj = PostModel.objects.get(id = post_id)
+        post_obj.delete()
         return Response({
             "message" : "성공적으로 삭제되었습니다."
         },status=status.HTTP_200_OK)
+    def put(self, request):
+        post_id = request.query_params.get('post_id')
+        post_obj = PostModel.objects.get(id=post_id)
+        post_serializer = PostSerializer(post_obj, data = request.data, partial=True)
+        if post_serializer.is_valid():
+            post_serializer.save()
+            return Response(post_serializer.data, status= status.HTTP_200_OK)
+        return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
