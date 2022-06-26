@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from user.serializers import UserSerializer
 from .models import PostModel
 from .serializer import PostSerializer
 
@@ -21,17 +22,18 @@ class PostView(APIView):
         return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get(self,request):
         cur_user = request.user
-        post_models = PostModel.objects.filter(author = cur_user)
-        return Response(PostSerializer(post_models, many=True).data, status=status.HTTP_200_OK)
-    def delete(self, request):
-        post_id = request.query_params.get('post_id')
+        post_models = PostModel.objects.filter(author = cur_user).order_by('-created_at')
+        return Response(
+            {"user" : UserSerializer(cur_user).data,
+            "posts" : PostSerializer(post_models,many=True).data},
+            status=status.HTTP_200_OK)
+    def delete(self, request, post_id):
         post_obj = PostModel.objects.get(id = post_id)
         post_obj.delete()
         return Response({
             "message" : "성공적으로 삭제되었습니다."
         },status=status.HTTP_200_OK)
-    def put(self, request):
-        post_id = request.query_params.get('post_id')
+    def put(self, request, post_id):
         post_obj = PostModel.objects.get(id=post_id)
         post_serializer = PostSerializer(post_obj, data = request.data, partial=True)
         if post_serializer.is_valid():
