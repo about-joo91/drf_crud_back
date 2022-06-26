@@ -1,6 +1,8 @@
-from hashlib import new
 from rest_framework import serializers
+
 from .models import UserModel, UserProfile, Hobby
+
+
 class HobbySerializer(serializers.ModelSerializer):
     class Meta:
         model = Hobby
