@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.conf import settings
 class UserManager(BaseUserManager):
     def create_user(self,email, password=None):
         if not email:
@@ -26,6 +26,7 @@ class UserModel(AbstractBaseUser):
     password  = models.CharField('password', max_length=128)
     fullname = models.CharField('fullname', max_length=100)
     nickname = models.CharField('nickname', max_length=100)
+    follower = models.ManyToManyField(settings.AUTH_USER_MODEL)
     
     join_date = models.DateField('created_at', auto_now_add=True)
     updated_at = models.DateField('updated_at', auto_now=True)
