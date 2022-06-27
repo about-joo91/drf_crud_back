@@ -21,8 +21,11 @@ class PostView(APIView):
         return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get(self,request):
         cur_user = request.user
-        post_models = PostModel.objects.filter(author = cur_user).order_by('-created_at')
+        post_models = PostModel.objects.filter(author = cur_user)
+        
         my_followers = cur_user.follower.all()
+        post_models |= PostModel.objects.filter(author__in = my_followers)
+        post_models.order_by('-created_at')
         recommend_followers = UserModel.objects.none()
         for user_obj in my_followers:
             recommend_followers|= user_obj.follower.all()

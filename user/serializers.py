@@ -7,12 +7,14 @@ class HobbySerializer(serializers.ModelSerializer):
     class Meta:
         model = Hobby
         fields= ["hobby_name"]
+
 class UserProfileSerializer(serializers.ModelSerializer):
     get_hobbies = serializers.ListField(required = False)
     hobby = HobbySerializer(read_only=True, many=True)
     class Meta:
         model = UserProfile
         fields = ["address", "hobby", "get_hobbies"]
+        
 class UserSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer()
     def create(self, validated_data):
