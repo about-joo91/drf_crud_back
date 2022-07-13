@@ -14,10 +14,10 @@ jobs:
         id: action_black
         with:
           black_args: "."
-      name: Run isort
-      - uses: jamescurtin/isort-action@master
+      - name: Run Isort
+        uses: jamescurtin/isort-action@master
         with:
-            requirementsFiles: "requirements.txt requirements-test.txt"
+          requirementsFiles: "requirements.txt requirements-test.txt"
       - name: Create Pull Request
         if: steps.action_black.outputs.is_formatted == 'true'
         uses: peter-evans/create-pull-request@v4
@@ -28,4 +28,3 @@ jobs:
           base : main
           branch: lint
           delete-branch: true
-          
