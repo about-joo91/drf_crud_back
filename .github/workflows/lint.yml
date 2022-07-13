@@ -17,7 +17,7 @@ jobs:
       - name: Run Isort
         uses: olance/isort-action@v1.0.0
         with:
-          args: "."
+          args: .
       - name: Create Pull Request
         if: steps.action_black.outputs.is_formatted == 'true'
         uses: peter-evans/create-pull-request@v4
